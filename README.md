@@ -1,4 +1,4 @@
-# students-crud-dom-starter
+# 24-2 - students-crud-dom-demo starter code
 
 ### UI view
 
