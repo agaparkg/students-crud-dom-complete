@@ -28,7 +28,7 @@ selectSortBy.addEventListener("change", (e) => {
 function initApp() {
   bsSpinner.classList.toggle("d-none");
 
-  //   getStudents()
+  getStudents().then((data) => console.log(data));
 }
 
 initApp();
