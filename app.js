@@ -1,4 +1,5 @@
-import { getStudents } from "./api-calls.js";
+import { apiDeleteStudents, getStudents, getStudents2 } from "./api-calls.js";
+const url = "https://63000b629350a1e548e9abfc.mockapi.io/api/v1/students";
 
 const selectSortBy = document.querySelector("select");
 const addStudentBtn = document.getElementById("add-student");
@@ -19,6 +20,8 @@ const modalTitle = document.querySelector(".modal-header h1");
 const modalBody = document.querySelector("#myModal .modal-body");
 const modalFooter = document.querySelector("#myModal .modal-footer");
 
+window.deleteStudent = deleteStudent;
+
 let students = [];
 
 addStudentBtn.addEventListener("click", () => {});
@@ -27,13 +30,23 @@ selectSortBy.addEventListener("change", (e) => {
   console.log(e.target.value);
 });
 
+// async function initApp() {
 function initApp() {
   //   bsSpinner.classList.add("d-none");
   //   bsSpinner.classList.remove("d-none");
   bsSpinner.classList.toggle("d-none");
 
   //   const data = await getStudents();
+  //   const data2 = await getStudents2();
 
+  //   getStudents2().then((d) => console.log(d));
+  //   fetch(url)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       bsSpinner.classList.toggle("d-none");
+  //       students = data;
+  //       createStudents(students);
+  //     });
   getStudents().then((data) => {
     bsSpinner.classList.toggle("d-none");
     students = data;
@@ -49,15 +62,15 @@ function initApp() {
 initApp();
 
 function createStudents(students) {
-  //   students = [];
   tableBody.innerHTML = "";
 
   if (!students.length) {
+    // if(!0){}
     tableBody.innerHTML = `
-        <tr>
-            <td colspan="8">No data found!</td>
-        </tr>
-    `;
+          <tr>
+              <td colspan="8">No data found!</td>
+          </tr>
+      `;
     return;
   }
 
@@ -83,7 +96,7 @@ function createSingleStudent({ id, fname, lname, age, avatar, email, github }) {
                 <button id="edit" type="button" class="btn btn-secondary">
                     <i class="bi bi-pencil"></i>
                 </button>
-                <button id="delete" type="button" class="btn btn-danger">
+                <button id="delete" onclick="deleteStudent(${id})" type="button" class="btn btn-danger">
                     <i class="bi bi-trash"></i>
                 </button>
                 <button id="info" type="button" class="btn btn-primary">
@@ -94,4 +107,11 @@ function createSingleStudent({ id, fname, lname, age, avatar, email, github }) {
   `;
 
   tableBody.innerHTML += studentEl;
+}
+
+function deleteStudent(id) {
+  apiDeleteStudents(id).then((d) => {
+    initApp();
+  });
+  console.log("deleting", id);
 }

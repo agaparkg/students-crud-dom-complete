@@ -68,7 +68,7 @@
             <div class="spinner-border text-primary mb-2" role="status"></div>
           </div>
           <tbody>
-            <!-- <tr>
+            <tr>
               <td>1</td>
               <td>
                 <img src="" alt="" />
@@ -82,14 +82,19 @@
                 <button id="edit" type="button" class="btn btn-secondary">
                   <i class="bi bi-pencil"></i>
                 </button>
-                <button id="delete" type="button" class="btn btn-danger">
+                <button
+                  id="delete"
+                  onclick="deleteStudent()"
+                  type="button"
+                  class="btn btn-danger"
+                >
                   <i class="bi bi-trash"></i>
                 </button>
                 <button id="info" type="button" class="btn btn-primary">
                   <i class="bi bi-info-circle-fill"></i>
                 </button>
               </td>
-            </tr> -->
+            </tr>
           </tbody>
         </table>
       </div>
@@ -135,12 +140,12 @@
     <div class="position-fixed top-50 start-0 p-3" style="z-index: 11">
       <div
         id="liveToast"
-        class="toast hide bg-info"
+        class="toast show bg-warning"
         role="alert"
         aria-live="assertive"
         aria-atomic="true"
       >
-        <div class="toast-body"></div>
+        <div class="toast-body">Student has been deleted!</div>
       </div>
     </div>
     <script
