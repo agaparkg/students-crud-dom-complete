@@ -23,8 +23,6 @@
         id="add-student"
         type="button"
         class="btn btn-primary position-absolute"
-        data-bs-toggle="modal"
-        data-bs-target="#myModal"
       >
         Add Student
       </button>
@@ -120,7 +118,62 @@
           </div>
           <div class="modal-body">
             <p id="delete-confirmation-text" class="d-none"></p>
-            Woohoo, you're reading this text in a modal!
+            <form id="modalForm" class="mx-3">
+              <div class="mb-3 text-center">
+                <img
+                  id="studentPhoto"
+                  width="200"
+                  class="d-none"
+                  src=""
+                  alt=""
+                />
+              </div>
+              <div class="mb-3">
+                <label for="fname" class="form-label fw-bolder"
+                  >First Name *</label
+                >
+                <input required type="text" class="form-control" id="fname" />
+              </div>
+              <div class="mb-3">
+                <label for="lname" class="form-label fw-bolder"
+                  >Last Name *</label
+                >
+                <input required type="text" class="form-control" id="lname" />
+              </div>
+              <div class="mb-3">
+                <label for="age" class="form-label fw-bolder">Age *</label>
+                <input required type="number" class="form-control" id="age" />
+              </div>
+              <!-- <div class="mb-3">
+                <label for="email" class="form-label fw-bolder"
+                  >Email address *</label
+                >
+                <input required type="email" class="form-control" id="email" />
+              </div> -->
+              <div class="mb-3">
+                <label for="github" class="form-label fw-bolder"
+                  >Github *</label
+                >
+                <input required type="text" class="form-control" id="github" />
+              </div>
+              <!-- <div class="mb-3">
+                <label for="avatar" class="form-label fw-bolder"
+                  >Photo URL *</label
+                >
+                <input required type="url" class="form-control" id="avatar" />
+              </div> -->
+              <button
+                id="cancelAndClose"
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
+              <button id="submit" type="submit" class="btn btn-primary d-none">
+                Submit
+              </button>
+            </form>
           </div>
           <div class="modal-footer">
             <button
