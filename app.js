@@ -1,3 +1,5 @@
+import { getStudents } from "./api-calls.js";
+
 const selectSortBy = document.querySelector("select");
 const addStudentBtn = document.getElementById("add-student");
 // --------------- Spinner ---------------
@@ -16,3 +18,17 @@ const submitBtn = document.querySelector("#submit");
 const modalTitle = document.querySelector(".modal-header h1");
 const modalBody = document.querySelector("#myModal .modal-body");
 const modalFooter = document.querySelector("#myModal .modal-footer");
+
+addStudentBtn.addEventListener("click", () => {});
+
+selectSortBy.addEventListener("change", (e) => {
+  console.log(e.target.value);
+});
+
+function initApp() {
+  bsSpinner.classList.toggle("d-none");
+
+  //   getStudents()
+}
+
+initApp();
