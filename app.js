@@ -36,6 +36,11 @@ let students = [];
 let editMode = false;
 let selectedStudentId = null;
 
+selectSortBy.addEventListener("change", (e) => {
+  console.log(e.target.value);
+  sortAndCreateStudents(students);
+});
+
 // async function initApp() {
 function initApp() {
   //   bsSpinner.classList.add("d-none");
@@ -56,13 +61,37 @@ function initApp() {
   getStudents().then((data) => {
     bsSpinner.classList.toggle("d-none");
     students = data;
-    createStudents(students);
+    sortAndCreateStudents(students);
   });
   //   setTimeout(() => {}, 2000);
 
   //   bsSpinner.classList.add("d-none");
 
   //   getStudents().then((data) => console.log(data));
+}
+
+function sortAndCreateStudents(students) {
+  if (selectSortBy.value) {
+    createStudents(
+      students.sort((a, b) => compareFn(a, b, selectSortBy.value))
+    );
+  } else {
+    createStudents(students);
+  }
+}
+
+function compareFn(a, b, sortBy) {
+  // > 0 => 50 - 30
+  // < 0 => 30 - 50
+  // 0 => 50 = 50
+  // return a.name - b.name;
+  if (a[sortBy] > b[sortBy]) {
+    return 1;
+  } else if (a[sortBy] < b[sortBy]) {
+    return -1;
+  } else {
+    return 0;
+  }
 }
 
 initApp();
@@ -142,10 +171,6 @@ addStudentBtn.addEventListener("click", () => {
   modalFooter.innerHTML = "";
   toggleModal("Add new student", true, false);
   submitBtn.classList.remove("d-none");
-});
-
-selectSortBy.addEventListener("change", (e) => {
-  console.log(e.target.value);
 });
 
 function deleteStudent(id) {
@@ -234,7 +259,7 @@ modalForm.addEventListener("submit", (e) => {
   //   const inputElements = e.target.querySelectorAll("input");
   const inputElements = modalForm.querySelectorAll("input");
 
-  console.log(inputElements);
+  //   console.log(inputElements);
   //   const formData = {
   //     fname: inputElements[0].value,
   //     lname: inputElements[1].value,
@@ -252,8 +277,16 @@ modalForm.addEventListener("submit", (e) => {
   //     formData[child.id] = child.value;
   //   }
 
-  [...inputElements].forEach((child) => (formData[child.id] = child.value));
-  console.log(formData);
+  //   [...inputElements].forEach((child) => (formData[child.id] = child.value));
+
+  for (let child of inputElements) {
+    if (child.type === "number") {
+      formData[child.id] = +child.value;
+    } else {
+      formData[child.id] = child.value;
+    }
+  }
+  //   console.log(formData);
 
   const fieldsNotEmpty = [...inputElements].every(
     (el) => el.value.trim() !== ""
@@ -262,7 +295,7 @@ modalForm.addEventListener("submit", (e) => {
   if (fieldsNotEmpty) {
     if (editMode) {
       apiPutStudent(selectedStudentId, formData).then((d) => {
-        console.log("Student has been updated successfully!", d);
+        // console.log("Student has been updated successfully!", d);
         toggleLiveToast(
           `Student with id ${d.id} has been updated successfully!`
         );
@@ -272,7 +305,7 @@ modalForm.addEventListener("submit", (e) => {
       });
     } else {
       apiPostStudent(formData).then((d) => {
-        console.log("New student has been added successfully!", d);
+        // console.log("New student has been added successfully!", d);
         toggleLiveToast(
           `New student with id ${d.id} has been added successfully!`
         );
@@ -303,11 +336,11 @@ searchInput.addEventListener("keyup", (e) => {
       );
     });
 
-    createStudents(filteredStudents);
+    sortAndCreateStudents(filteredStudents);
   } else {
     searchGlassIcon.classList.remove("d-none");
     clearIcon.classList.add("d-none");
-    createStudents(students);
+    sortAndCreateStudents(students);
   }
 });
 
@@ -316,5 +349,5 @@ clearIcon.addEventListener("click", () => {
   searchGlassIcon.classList.remove("d-none");
   clearIcon.classList.add("d-none");
 
-  createStudents(students);
+  sortAndCreateStudents(students);
 });
