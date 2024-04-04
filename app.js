@@ -37,7 +37,6 @@ let editMode = false;
 let selectedStudentId = null;
 
 selectSortBy.addEventListener("change", (e) => {
-  console.log(e.target.value);
   sortAndCreateStudents(students);
 });
 
@@ -162,7 +161,8 @@ function toggleModal(text, state, attr) {
   }
 }
 
-addStudentBtn.addEventListener("click", () => {
+addStudentBtn.addEventListener("click", (e) => {
+  console.log(e.target.id);
   modalForm.reset();
   //   [...modalForm.querySelectorAll("input")].forEach((el) => (el.value = ""));
 
