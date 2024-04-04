@@ -30,6 +30,7 @@ const modalFooter = document.querySelector("#myModal .modal-footer");
 window.deleteStudent = deleteStudent;
 window.editStudent = editStudent;
 window.infoStudent = infoStudent;
+window.yesDeleteStudent = yesDeleteStudent;
 
 let students = [];
 let editMode = false;
@@ -136,6 +137,8 @@ addStudentBtn.addEventListener("click", () => {
   modalForm.reset();
   //   [...modalForm.querySelectorAll("input")].forEach((el) => (el.value = ""));
 
+  modalForm.classList.remove("d-none");
+  delConfirmTxt.classList.add("d-none");
   modalFooter.innerHTML = "";
   toggleModal("Add new student", true, false);
   submitBtn.classList.remove("d-none");
@@ -146,14 +149,47 @@ selectSortBy.addEventListener("change", (e) => {
 });
 
 function deleteStudent(id) {
+  toggleModal("Delete?", true, false);
+  modalForm.classList.add("d-none");
+  delConfirmTxt.classList.remove("d-none");
+  delConfirmTxt.innerHTML = `Are you sure you wanna delete student with id ${id}?`;
+  modalFooter.innerHTML = `
+    <button
+        type="button"
+        class="btn btn-secondary"
+        data-bs-dismiss="modal"
+    >
+        No
+    </button>
+    <button onclick="yesDeleteStudent(${id})" type="button" class="btn btn-primary">Yes</button>
+  `;
+}
+
+function yesDeleteStudent(id) {
+  toggleModal("", false, false);
   apiDeleteStudents(id).then((d) => {
+    toggleLiveToast(
+      `Student with id <strong>${id}</strong> has been deleted successfully!`
+    );
     initApp();
   });
-  console.log("deleting", id);
+}
+
+function toggleLiveToast(text) {
+  liveToast.children[0].innerHTML = text;
+  liveToast.classList.remove("hide");
+  liveToast.classList.add("show");
+
+  setTimeout(() => {
+    liveToast.classList.add("hide");
+    liveToast.classList.remove("show");
+  }, 2000);
 }
 
 function infoStudent(id) {
   toggleModal("Student Information", true, true);
+  modalForm.classList.remove("d-none");
+  delConfirmTxt.classList.add("d-none");
 
   getSingleStudent(id).then((student) => {
     const { fname, lname, email, age, avatar, github } = student;
@@ -174,14 +210,17 @@ function editStudent(id) {
   editMode = true;
   selectedStudentId = id;
   toggleModal(`Edit student with id ${id}`, true, false);
+  modalForm.classList.remove("d-none");
+  delConfirmTxt.classList.add("d-none");
+
   getSingleStudent(id).then((student) => {
     const { fname, lname, email, age, avatar, github } = student;
 
-    modalForm.avatar.value = avatar;
+    // modalForm.avatar.value = avatar;
     modalForm.fname.value = fname;
     modalForm.lname.value = lname;
     modalForm.age.value = age;
-    modalForm.email.value = email;
+    // modalForm.email.value = email;
     modalForm.github.value = github;
   });
 
@@ -223,14 +262,20 @@ modalForm.addEventListener("submit", (e) => {
   if (fieldsNotEmpty) {
     if (editMode) {
       apiPutStudent(selectedStudentId, formData).then((d) => {
-        console.log("Student has been updated successfully!");
+        console.log("Student has been updated successfully!", d);
+        toggleLiveToast(
+          `Student with id ${d.id} has been updated successfully!`
+        );
         initApp();
         editMode = false;
         selectedStudentId = null;
       });
     } else {
       apiPostStudent(formData).then((d) => {
-        console.log("New student has been added successfully!");
+        console.log("New student has been added successfully!", d);
+        toggleLiveToast(
+          `New student with id ${d.id} has been added successfully!`
+        );
         initApp();
       });
     }
@@ -239,4 +284,37 @@ modalForm.addEventListener("submit", (e) => {
   }
 
   toggleModal("", false, false);
+});
+
+searchInput.addEventListener("keyup", (e) => {
+  const value = e.target.value.trim().toLowerCase();
+  let filteredStudents = [];
+
+  if (value !== "") {
+    searchGlassIcon.classList.add("d-none");
+    clearIcon.classList.remove("d-none");
+
+    filteredStudents = students.filter((student) => {
+      return (
+        student.fname.toLowerCase().includes(value) ||
+        student.lname.toLowerCase().includes(value) ||
+        student.email.toLowerCase().includes(value) ||
+        student.github.toLowerCase().includes(value)
+      );
+    });
+
+    createStudents(filteredStudents);
+  } else {
+    searchGlassIcon.classList.remove("d-none");
+    clearIcon.classList.add("d-none");
+    createStudents(students);
+  }
+});
+
+clearIcon.addEventListener("click", () => {
+  searchInput.value = "";
+  searchGlassIcon.classList.remove("d-none");
+  clearIcon.classList.add("d-none");
+
+  createStudents(students);
 });
