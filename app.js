@@ -6,6 +6,7 @@ import {
   apiPostStudent,
   apiPutStudent,
 } from "./api-calls.js";
+import { compareFn } from "./utils.js";
 const url = "https://63000b629350a1e548e9abfc.mockapi.io/api/v1/students";
 
 const selectSortBy = document.querySelector("select");
@@ -76,20 +77,6 @@ function sortAndCreateStudents(students) {
     );
   } else {
     createStudents(students);
-  }
-}
-
-function compareFn(a, b, sortBy) {
-  // > 0 => 50 - 30
-  // < 0 => 30 - 50
-  // 0 => 50 = 50
-  // return a.name - b.name;
-  if (a[sortBy] > b[sortBy]) {
-    return 1;
-  } else if (a[sortBy] < b[sortBy]) {
-    return -1;
-  } else {
-    return 0;
   }
 }
 
