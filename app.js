@@ -106,7 +106,7 @@ function createSingleStudent({ id, fname, lname, age, avatar, email, github }) {
             <tr>
                 <td>${id}</td>
                 <td>
-                    <img src="${avatar}" alt="" />
+                    <img src="${avatar}" alt="" width="100" />
                 </td>
                 <td>${fname}</td>
                 <td>${lname}</td>
